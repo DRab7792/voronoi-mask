@@ -1,0 +1,19 @@
+{
+  "name": "voronoi",
+  "version": "1.0.0",
+  "description": "Voronoi masks on images",
+  "scripts": {
+    "start": "gulp connect",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [
+    "voronoi",
+    "mask"
+  ],
+  "author": "Dan Rabinowitz",
+  "license": "ISC",
+  "devDependencies": {
+    "gulp": "^4.0.2",
+    "gulp-connect": "^5.7.0"
+  }
+}
