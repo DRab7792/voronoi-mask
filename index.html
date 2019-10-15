@@ -5,15 +5,34 @@
         <script src="https://cdnjs.cloudflare.com/ajax/libs/d3/5.12.0/d3.js"></script>
         <script src="js/voronoi.js"></script>
         <link rel="stylesheet" href="css/voronoi.css" />
+        <script>
+            $(document).ready(() => {
+                const voronoi = new VoronoiMask($("#versaille"), {
+                    // base: "img/versaille-black-white.jpg",
+                    base: "img/versaille-edges.png",
+                    reveal: "img/versaille.jpg",
+                    mask: "img/versaille-mask.jpg",
+                    regions: [
+                        {
+                            id: "divider",
+                            color: "#ff0000"
+                        },
+                        {
+                            id: "tapestry",
+                            color: "#0000ff"
+                        }
+                    ]
+                });
+                voronoi.render()
+                .then(() => {
+                    voronoi.showFullRegion("divider");
+                });
+            });
+        </script>
     </head>
     <body>
-        <div class="voronoi" 
-            id="versaille"
-            data-base="img/versaille-black-white.jpg" 
-            data-reveal="img/versaille.jpg" 
-            data-mask="img/versaille-mask.jpg"
-        ></div>
-        <input type="button" class="action" id="ff0000" value="Red">
-        <input type="button" class="action" id="0000ff" value="Blue">
+        <div class="voronoi" id="versaille"></div>
+        <input type="button" class="action" id="divider" value="Red">
+        <input type="button" class="action" id="tapestry" value="Blue">
     </body>
 </html>
