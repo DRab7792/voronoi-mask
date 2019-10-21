@@ -152,7 +152,7 @@ class VoronoiMask {
         }
     }
 
-    _clearClipPath(clipPath) {
+    clearClipPath(clipPath) {
         this.svg.select("clipPath#mask")
             .selectAll("." + clipPath)
             .remove();
@@ -175,9 +175,38 @@ class VoronoiMask {
         }
         const vertices = regions[0].vertices.map(vertex => vertex.id);
         
-        this._clearClipPath(regionId);
+        this.clearClipPath(regionId);
         vertices.forEach(vertexId => {
             this._addPolygonToClipPath(vertexId, regionId);
+        });
+    }
+
+    _sortVerticesBySize() {
+        this.regions.forEach(region => {
+            region.vertices.sort((a, b) => {
+                return a.size - b.size;
+            });
+        });
+    }
+
+    showRegionByPercent(regionId, percent) {
+        if (percent > 1 || percent < 0) {
+            throw "Percent should be between 0 and 1";
+        }
+
+        const regions = this.regions.filter(curRegion => curRegion.id == regionId);
+        if (!regions.length) {
+            throw "No region found";
+        }
+
+        let remaining = regions[0].size * percent;
+
+        this.clearClipPath(regionId);
+        regions[0].vertices.forEach(vertex => {
+            if (remaining > vertex.size) {
+                remaining -= vertex.size;
+                this._addPolygonToClipPath(vertex.id, regionId);
+            }
         });
     }
 
@@ -189,6 +218,7 @@ class VoronoiMask {
             .then(() => {
                 this._renderShapes();
                 this._assignRegions();
+                this._sortVerticesBySize();
                 this.svg.attr("viewbox", `0 0 ${this.width} ${this.height}`);
                 this.svg.attr("width", this.width);
                 this.svg.attr("height", this.height);

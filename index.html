@@ -7,7 +7,7 @@
         <link rel="stylesheet" href="css/voronoi.css" />
         <script>
             $(document).ready(() => {
-                const voronoi = new VoronoiMask($("#versaille"), {
+                window.voronoi = new VoronoiMask($("#versaille"), {
                     // base: "img/versaille-black-white.jpg",
                     base: "img/versaille-edges.png",
                     reveal: "img/versaille.jpg",
@@ -23,16 +23,32 @@
                         }
                     ]
                 });
-                voronoi.render()
-                .then(() => {
-                    voronoi.showFullRegion("divider");
+
+                voronoi.render();
+
+                const scores = {
+                    divider: 0,
+                    tapestry: 0
+                };
+                const limit = 20;
+                $(".action").click(function(){
+                    const id = $(this).attr("id");
+                    if (scores[id] < limit) {
+                        scores[id]++;
+                        voronoi.showRegionByPercent(id, scores[id]/limit);
+                    } else {
+                        const opposite = id == "divider" ? "tapestry" : "divider";
+                        $(".action").attr("disabled", true);
+                        voronoi.clearClipPath(opposite);
+                        voronoi.showFullRegion(id);
+                    }
                 });
             });
         </script>
     </head>
     <body>
         <div class="voronoi" id="versaille"></div>
-        <input type="button" class="action" id="divider" value="Red">
-        <input type="button" class="action" id="tapestry" value="Blue">
+        <input type="button" class="action" id="divider" value="Divider">
+        <input type="button" class="action" id="tapestry" value="Tapestry">
     </body>
 </html>
